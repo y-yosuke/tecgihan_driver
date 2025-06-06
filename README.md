@@ -239,33 +239,33 @@ ros2 topic echo /dma03_publisher/force
 ``` bash
 header:
   stamp:
-    sec: 1745303611
-    nanosec: 178185224
-  frame_id: force_sensor_right
+    sec: 1749188091
+    nanosec: 527961492
+  frame_id: force_sensor
 vector:
-  x: 3.1875
-  y: 2.59375
-  z: 2.0
+  x: 5.0
+  y: -0.71875
+  z: -8.0
 ---
 header:
   stamp:
-    sec: 1745303611
-    nanosec: 185195922
-  frame_id: force_sensor_right
+    sec: 1749188091
+    nanosec: 544060468
+  frame_id: force_sensor
 vector:
-  x: 3.78125
-  y: 1.5625
-  z: 1.71875
+  x: 6.78125
+  y: 0.25
+  z: -9.78125
 ---
 header:
   stamp:
-    sec: 1745303611
-    nanosec: 194132566
-  frame_id: force_sensor_right
+    sec: 1749188091
+    nanosec: 550899744
+  frame_id: force_sensor
 vector:
-  x: 2.40625
-  y: 0.875
-  z: 0.40625
+  x: 7.9375
+  y: 2.53125
+  z: -10.03125
 ---
 ```
 
