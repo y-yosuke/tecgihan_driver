@@ -2,7 +2,7 @@
 
 ## Class: `DMA03Driver`
 
-Serial port I/O class for DMA-03 for Robot amplifier
+Serial port I/O class for DMA-03 for Robot amplifier.
 
 ### `_close`()
 
@@ -11,7 +11,6 @@ _close(self)
 ```
 
 Close the serial port.
-
 
 ### `_find_port_by_id`()
 
@@ -30,7 +29,7 @@ Find a serial port by a vendor ID and a product ID.
 
 - `Union[str, None]`:
   - str: The port device string like '/dev/ttyUSB0'.
-  - None: The vendor ID or the product ID did not match the actual devoce connected.
+  - None: VID or PID did not match the actual devoce connected.
 
 
 ### `_find_port_by_name`()
@@ -51,7 +50,7 @@ Find a serial port by a device name and optionally by a device location.
 
 - `Union[str, None]`:
   - str: The port device string like '/dev/ttyUSB0'.
-  - None: The device name or the device location did not match the actual devoce connected.
+  - None: The args did not match the actual device connected.
 
 
 ### `_is_connected`()
@@ -78,7 +77,8 @@ Open a serial port.
 **Args:**
 
 - `port` (str, optional): The device port. Defaults to '/dev/ttyUSB0'.
-- `timeout` (float, optional): Set a read timeout value in seconds. Defaults to 1.0.
+- `timeout` (float, optional): Set a read timeout value in seconds.
+  Defaults to 1.0.
 
 
 ### `_print_info`()
@@ -88,7 +88,6 @@ _print_info(self)
 ```
 
 Print the serial port informations.
-
 
 ### `_recv_command`()
 
@@ -100,8 +99,8 @@ Read the serial port input buffer until the terminator.
 
 **Args:**
 
-- `terminator` (bytes, optional): The terminator to end reading. Defaults to b'
-  '.
+- `terminator` (bytes, optional): 
+  The terminator to end reading. Defaults to b'\n'.
 
 **Returns:**
 
@@ -115,7 +114,6 @@ _reset_input_buffer(self)
 ```
 
 Reset the serial port input buffer.
-
 
 ### `_send_command`()
 
@@ -136,7 +134,7 @@ Send command to the serial port write buffer with the command string.
 
 ## Class: `DMA03DriverForRobot`
 
-Command I/O class for DMA-03 for Robot amplifier
+Command I/O class for DMA-03 for Robot amplifier.
 
 ### `__del__`()
 
@@ -146,29 +144,30 @@ __del__(self)
 
 Destructor of this class instance.
 
-
 ### `__init__`()
 
 ```python
 __init__(self, debug=False, frequency=1000, init_zero=False, timeout=1.0, serial_number=None, location=None)
 ```
 
-Constructor of DMA03DriverForRobot class instance.
+Construct DMA03DriverForRobot class instance.
 
 **Args:**
 
-- `debug` (bool, optional): 
-  True is for Debug mode, False is not. Defaults to False.
-- `frequency` (int, optional): 
-  Sensing frequency. Defaults to 1000.
-- `init_zero` (bool, optional): 
-  True to initialize as Zero forces. Defaults to False.
-- `timeout` (float, optional): 
-  The max time [sec] to wait data during read operation. Defaults to 1.0.
-- `serial_number` (str, optional): 
-  The device serial number to distinguish between multiple amplifiers. Defaults to None.
-- `location` (str, optional): 
-  The device location like '1-2' to distinguish between multiple amplifiers. Defaults to None.
+- `debug` (bool, optional): True is for Debug mode, False is not.
+  Defaults to False.
+- `frequency` (int, optional): Sensing frequency.
+  Defaults to 1000.
+- `init_zero` (bool, optional): True to initialize as Zero forces.
+  Defaults to False.
+- `timeout` (float, optional): The max time [sec] to wait data
+  during read operation. Defaults to 1.0.
+- `serial_number` (str, optional): The device serial number
+  to distinguish between multiple amplifiers.
+  Defaults to None.
+- `location` (str, optional): The device location like '1-2'
+  to distinguish between multiple amplifiers.
+  Defaults to None.
 
 
 ### `_calculate_eng_data`()
@@ -199,8 +198,7 @@ Calculate the engineering data from signed int data with FS values.
 _data_conversion(self)
 ```
 
-A threaded function to aquire and convert sensing data.
-
+Aquire and convert sensing data with thread.
 
 ### `_get_reply`()
 
@@ -225,7 +223,10 @@ Send a command to the amplifier and get a reply for it.
 _ros_publish(self)
 ```
 
-An empty function to override in a ROS node to publish a ROS topic after the data conversion.
+Be overrided in a ROS node.
+
+An empty function to override in a ROS node
+to publish a ROS topic after the data conversion.
 
 **Returns:**
 
@@ -240,12 +241,14 @@ _to_signedint(self, value: int, bits=16)
 
 Convert an unsigned int to a signed int.
 
-Converts an unsigned integer to its signed integer representation using two's complement.
+Converts an unsigned integer to its signed integer representation
+using two's complement.
 
 **Args:**
 
 - `value` (int): The unsigned integer to convert
-- `bits` (int, optional): The bit width to interpret the value with. Defaults to 16.
+- `bits` (int, optional): The bit width to interpret the value with.
+  Defaults to 16.
 
 **Returns:**
 
@@ -258,8 +261,10 @@ Converts an unsigned integer to its signed integer representation using two's co
 close(self)
 ```
 
-Close the serial port after stopping the amplifier and the data conversion process.
+Close the serial port.
 
+Close the serial port
+after stopping the amplifier and the data conversion process.
 
 ### `get_data`()
 
@@ -267,7 +272,7 @@ Close the serial port after stopping the amplifier and the data conversion proce
 get_data(self)
 ```
 
-Get engineering data converted from
+Get engineering data.
 
 **Returns:**
 
@@ -312,7 +317,9 @@ Get a list of 3 int data of FS (Full Scale) from the amplifier.
 get_itf(self)
 ```
 
-Get a list of 3x3 float data of ITF (Interference coefficients) from the amplifier.
+Get a list of 3x3 float data of ITF from the amplifier.
+
+ITF means Interference coefficients.
 
 **Returns:**
 
@@ -338,7 +345,7 @@ Return the serial port is connected or not.
 set_for_robot(self)
 ```
 
-If available, set the amplifier to robot mode if available or to non-robot mode.
+Set the amplifier to robot mode if available or to non-robot mode.
 
 **Returns:**
 
@@ -393,11 +400,13 @@ Set 3 int data of FS (Full Scale) to the amplifier.
 set_itf(self, val_list: list[float])
 ```
 
-Set 3x3 float data for ITF (Interference coefficients) in the amplifier.
+Set 3x3 float data for ITF in the amplifier.
+
+ITF means Interference coefficients.
 
 **Args:**
 
-- `val_list` (list[float]): list of 3x3 float data for ITF to set in the amplifier.
+- `val_list` (list[float]): list of 3x3 float for ITF to set in the amplifier.
 
 **Returns:**
 
