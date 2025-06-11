@@ -131,7 +131,7 @@ class DMA03Driver:
         """
         ports = serial.tools.list_ports.comports()
         for port in ports:
-            if port.product and product_name in port.product:
+            if port.product and product_name == port.product:
                 if serial_number:
                     if port.serial_number and serial_number == port.serial_number:
                         print('Device Serial No. - Specified: {}'.format(port.serial_number))
