@@ -11,7 +11,7 @@ class DMA03Driver:
     """
     Serial port I/O class for DMA-03 for Robot amplifier
     """
-    def _open(self, port='/dev/ttyUSB0', timeout=1.0):
+    def _open(self, baud=3000000, port='/dev/ttyUSB0', timeout=1.0):
         """Open a serial port.
 
         Args:
@@ -19,7 +19,7 @@ class DMA03Driver:
             timeout (float, optional): Set a read timeout value in seconds. Defaults to 1.0.
         """
         self._ser = serial.Serial(port=port,
-                                  baudrate=6000000,
+                                  baudrate=baud,
                                   parity = serial.PARITY_NONE,
                                   bytesize = serial.EIGHTBITS,
                                   stopbits = serial.STOPBITS_ONE,
@@ -168,11 +168,19 @@ class DMA03DriverForRobot(DMA03Driver):
                 The device location like '1-2' to distinguish between multiple amplifiers. Defaults to None.
         """
         print('Tec Gihan DMA-03 for Robot Driver: Starting ...')
-        product_name = 'DMA-03'
-        port = '/dev/ttyUSB0'
-        port = self._find_port_by_name(product_name=product_name, serial_number=serial_number, location=location)
-        self._open(port, timeout=timeout)
-        time.sleep(1)
+
+        products = [('DMA-03',  6000000),
+                    ('DMA-03B', 3000000)]
+
+        for product_name, baud in products:
+            port = self._find_port_by_name(product_name=product_name, serial_number=serial_number, location=location)
+            if port:
+                self._open(baud, port, timeout=timeout)
+                time.sleep(1)
+                break
+            print(f'No {product_name}')
+        else:
+            return
 
         if self._is_connected():
             print('Connected: {}'.format(product_name))
