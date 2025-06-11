@@ -133,11 +133,11 @@ class DMA03Driver:
         for port in ports:
             if port.product and product_name in port.product:
                 if serial_number:
-                    if port.serial_number and serial_number in port.serial_number:
+                    if port.serial_number and serial_number == port.serial_number:
                         print('Device Serial No. - Specified: {}'.format(port.serial_number))
                         return port.device
                 elif location:
-                    if port.location and location in port.location:
+                    if port.location and location == port.location:
                         print('Device Location - Specified: {}'.format(port.location))
                         return port.device
                 else:
