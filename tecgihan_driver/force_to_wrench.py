@@ -1,18 +1,20 @@
-import rclpy
-from rclpy.node import Node
+#!/usr/bin/env python
 
 from geometry_msgs.msg import Vector3Stamped, WrenchStamped
 
+import rclpy
+
+from rclpy.node import Node
+
+
 class ForceToWrench(Node):
-    """
-    ROS Node for converting Vector3Stamped to WrenchStamped ROS Topic
-    """
+    """ROS Node for converting Vector3Stamped to WrenchStamped ROS Topic."""
+
     def __init__(self):
-        """Constructor for ForceToWrench.
-        """
+        """Construct ForceToWrench."""
         super().__init__('force_to_wrench_node')
 
-        input_topic  = '/dma03_publisher/force'
+        input_topic = '/dma03_publisher/force'
         output_topic = '/dma03_publisher/wrench'
 
         # Subscribe to Vector3Stamped messages
@@ -33,7 +35,7 @@ class ForceToWrench(Node):
         self.get_logger().info('Force to Wrench Node has been started.')
 
     def listener_callback(self, msg: Vector3Stamped):
-        """Method called when ROS Topic `/dma03_publisher/force` is published.
+        """Be called when ROS Topic `/dma03_publisher/force` is published.
 
         Args:
             msg (Vector3Stamped): ROS Topic Data
@@ -49,11 +51,12 @@ class ForceToWrench(Node):
         wrench_msg.wrench.torque.z = 0.0
 
         self.publisher.publish(wrench_msg)
-        self.get_logger().debug(f'Published WrenchStamped: force=({msg.vector.x}, {msg.vector.y}, {msg.vector.z})')
+        self.get_logger().debug(
+            f'Published WrenchStamped: force=({msg.vector.x}, {msg.vector.y}, {msg.vector.z})')
+
 
 def main(args=None):
-    """Main routine with ForceToWrench.
-    """
+    """Execute ROS Node with ForceToWrench."""
     rclpy.init(args=args)
     node = ForceToWrench()
     try:
@@ -63,6 +66,7 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()

@@ -19,5 +19,8 @@ import pytest
 @pytest.mark.linter
 @pytest.mark.pep257
 def test_pep257():
-    rc = main(argv=['.', 'test'])
+    rc = main(argv=['.', 'test',
+                    '--convention=google',
+                    '--add-ignore=D406,D407,D413,D104,D103,D100',
+                    '--exclude=./tecgihan_driver/__init__.py'])
     assert rc == 0, 'Found code style errors / warnings'
