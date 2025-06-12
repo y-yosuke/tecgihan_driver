@@ -2,7 +2,7 @@
 
 ## Class: `DMA03Publisher`
 
-ROS Publisher for DMA-03 for Robot amplifier
+ROS Publisher for DMA-03 for Robot amplifier.
 
 ### `__init__`()
 
@@ -10,7 +10,7 @@ ROS Publisher for DMA-03 for Robot amplifier
 __init__(self)
 ```
 
-Constructor for DMA03Publisher.
+Construct DMA03Publisher.
 
 **Args:**
 
@@ -23,8 +23,7 @@ Constructor for DMA03Publisher.
 cleanup(self)
 ```
 
-Cleaning up when stopping the node.
-
+Clean up when stopping the node.
 
 ### `event_callback`()
 
@@ -32,7 +31,7 @@ Cleaning up when stopping the node.
 event_callback(self)
 ```
 
-Method for publishing ROS Topic.
+Publish ROS Topic.
 
 **Returns:**
 
@@ -45,7 +44,7 @@ Method for publishing ROS Topic.
 parameter_callback(self, params)
 ```
 
-Method called when a ROS Pamameter has changed.
+Execute processes when a ROS Pamameter has changed.
 
 **Args:**
 
@@ -62,6 +61,5 @@ Method called when a ROS Pamameter has changed.
 main(args=None)
 ```
 
-Main routine with DMA03Publisher.
-
+Execute ROS Node with DMA03Publisher.
 

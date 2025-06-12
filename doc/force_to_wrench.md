@@ -2,7 +2,7 @@
 
 ## Class: `ForceToWrench`
 
-ROS Node for converting Vector3Stamped to WrenchStamped ROS Topic
+ROS Node for converting Vector3Stamped to WrenchStamped ROS Topic.
 
 ### `__init__`()
 
@@ -10,8 +10,7 @@ ROS Node for converting Vector3Stamped to WrenchStamped ROS Topic
 __init__(self)
 ```
 
-Constructor for ForceToWrench.
-
+Construct ForceToWrench.
 
 ### `listener_callback`()
 
@@ -19,7 +18,7 @@ Constructor for ForceToWrench.
 listener_callback(self, msg: geometry_msgs.msg._vector3_stamped.Vector3Stamped)
 ```
 
-Method called when ROS Topic `/dma03_publisher/force` is published.
+Be called when ROS Topic `/dma03_publisher/force` is published.
 
 **Args:**
 
@@ -32,6 +31,5 @@ Method called when ROS Topic `/dma03_publisher/force` is published.
 main(args=None)
 ```
 
-Main routine with ForceToWrench.
-
+Execute ROS Node with ForceToWrench.
 

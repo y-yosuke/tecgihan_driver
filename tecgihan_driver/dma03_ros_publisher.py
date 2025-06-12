@@ -1,24 +1,22 @@
 #!/usr/bin/env python
 
-import time
-import types
-
-import rclpy
-from rclpy.node import Node
 from builtin_interfaces.msg import Time
 from geometry_msgs.msg import Vector3Stamped
 from rcl_interfaces.msg import SetParametersResult
+
+import rclpy
+
+from rclpy.node import Node
 from rclpy.parameter import Parameter
 
 from tecgihan_driver.dma03_driver import DMA03DriverForRobot
 
 
 class DMA03Publisher(Node):
-    """
-    ROS Publisher for DMA-03 for Robot amplifier
-    """
+    """ROS Publisher for DMA-03 for Robot amplifier."""
+
     def __init__(self):
-        """Constructor for DMA03Publisher.
+        """Construct DMA03Publisher.
 
         Args:
             str: Node name.
@@ -35,27 +33,42 @@ class DMA03Publisher(Node):
         self.declare_parameter('timeout', 1.0)
         self.declare_parameter('param_file', 'UL100901.yaml')
         self.declare_parameter('param_path', '')
-        self.declare_parameter('fs_list', [1000,1000,1000])
-        self.declare_parameter('itf_list', [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0])
+        self.declare_parameter('fs_list', [1000, 1000, 1000])
+        self.declare_parameter(
+            'itf_list', [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0])
         self.declare_parameter('serial_no', '')
         self.declare_parameter('location', '')
         self.declare_parameter('frame_id', 'force_sensor')
 
-        debug_      = self.get_parameter('debug').get_parameter_value().bool_value
-        timer_      = self.get_parameter('timer').get_parameter_value().double_value
-        frequency_  = self.get_parameter('frequency').get_parameter_value().integer_value
-        init_zero_  = self.get_parameter('init_zero').get_parameter_value().bool_value
-        set_fs_     = self.get_parameter('set_fs').get_parameter_value().bool_value
-        set_itf_    = self.get_parameter('set_itf').get_parameter_value().bool_value
-        timeout_    = self.get_parameter('timeout').get_parameter_value().double_value
-        param_file_ = self.get_parameter('param_file').get_parameter_value().string_value
-        param_path_ = self.get_parameter('param_path').get_parameter_value().string_value
-        fs_list_    = self.get_parameter('fs_list').get_parameter_value().integer_array_value
-        itf_list_   = self.get_parameter('itf_list').get_parameter_value().double_array_value
-        serial_no_  = self.get_parameter('serial_no').get_parameter_value().string_value
-        location_   = self.get_parameter('location').get_parameter_value().string_value
+        debug_ = self.get_parameter(
+            'debug').get_parameter_value().bool_value
+        timer_ = self.get_parameter(
+            'timer').get_parameter_value().double_value
+        frequency_ = self.get_parameter(
+            'frequency').get_parameter_value().integer_value
+        init_zero_ = self.get_parameter(
+            'init_zero').get_parameter_value().bool_value
+        set_fs_ = self.get_parameter(
+            'set_fs').get_parameter_value().bool_value
+        set_itf_ = self.get_parameter(
+            'set_itf').get_parameter_value().bool_value
+        timeout_ = self.get_parameter(
+            'timeout').get_parameter_value().double_value
+        param_file_ = self.get_parameter(
+            'param_file').get_parameter_value().string_value
+        param_path_ = self.get_parameter(
+            'param_path').get_parameter_value().string_value
+        fs_list_ = self.get_parameter(
+            'fs_list').get_parameter_value().integer_array_value
+        itf_list_ = self.get_parameter(
+            'itf_list').get_parameter_value().double_array_value
+        serial_no_ = self.get_parameter(
+            'serial_no').get_parameter_value().string_value
+        location_ = self.get_parameter(
+            'location').get_parameter_value().string_value
 
-        self.frame_id = self.get_parameter('frame_id').get_parameter_value().string_value
+        self.frame_id = self.get_parameter(
+            'frame_id').get_parameter_value().string_value
 
         self.get_logger().info('Param: debug = {}'.format(debug_))
         self.get_logger().info('Param: timer = {}'.format(timer_))
@@ -108,28 +121,30 @@ class DMA03Publisher(Node):
             reply = self.driver.start()
             self.get_logger().info('START Reply: {}'.format(reply))
 
-            self.publisher_ = self.create_publisher(Vector3Stamped, '~/force', 10)
+            self.publisher_ = self.create_publisher(
+                Vector3Stamped, '~/force', 10)
 
             if 0.0 < timer_:
                 # Timer Event
-                self.get_logger().info('Publish Start! Timer: {} [sec]'.format(timer_))
+                self.get_logger().info(
+                    'Publish Start! Timer: {} [sec]'.format(timer_))
                 self.timer = self.create_timer(timer_, self.event_callback)
             else:
                 # Override: _ros_publish() by event_callback()
                 self.driver._ros_publish = self.event_callback
                 self.get_logger().info('Data Driven Publish Start!')
-            
+
             self.initialized = True
 
     def event_callback(self):
-        """Method for publishing ROS Topic.
+        """Publish ROS Topic.
 
         Returns:
             bool: True if executed.
         """
         msg = Vector3Stamped()
         data_time, eng1, eng2, eng3 = self.driver.get_data()
-        sec_     = int(data_time)
+        sec_ = int(data_time)
         nanosec_ = int((data_time - sec_)*1e9)
         msg.header.frame_id = self.frame_id
         msg.header.stamp = Time(sec=sec_, nanosec=nanosec_)
@@ -140,7 +155,7 @@ class DMA03Publisher(Node):
         return True
 
     def parameter_callback(self, params):
-        """Method called when a ROS Pamameter has changed.
+        """Execute processes when a ROS Pamameter has changed.
 
         Args:
             params (list[Parameter]): List of ROS Parameter(s).
@@ -160,16 +175,14 @@ class DMA03Publisher(Node):
         return SetParametersResult(successful=True)
 
     def cleanup(self):
-        """Cleaning up when stopping the node.
-        """
+        """Clean up when stopping the node."""
         self.get_logger().info('Node Cleaning Up')
         self.driver.close()
         self.destroy_node()
 
 
 def main(args=None):
-    """Main routine with DMA03Publisher.
-    """
+    """Execute ROS Node with DMA03Publisher."""
     rclpy.init(args=args)
     dma03_publisher = DMA03Publisher()
 
@@ -185,6 +198,7 @@ def main(args=None):
         dma03_publisher.get_logger().info('Not Initialized and Stop')
         dma03_publisher.cleanup()
         rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()
