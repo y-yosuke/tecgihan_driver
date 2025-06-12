@@ -1,52 +1,51 @@
 #!/usr/bin/env python
 
-import time
 from threading import Thread
+
+import time
 
 import serial
 import serial.tools.list_ports
 
 
 class DMA03Driver:
-    """
-    Serial port I/O class for DMA-03 for Robot amplifier
-    """
+    """Serial port I/O class for DMA-03 for Robot amplifier."""
+
     def _open(self, port='/dev/ttyUSB0', timeout=1.0):
         """Open a serial port.
 
         Args:
             port (str, optional): The device port. Defaults to '/dev/ttyUSB0'.
-            timeout (float, optional): Set a read timeout value in seconds. Defaults to 1.0.
+            timeout (float, optional): Set a read timeout value in seconds.
+                                        Defaults to 1.0.
         """
         self._ser = serial.Serial(port=port,
                                   baudrate=6000000,
-                                  parity = serial.PARITY_NONE,
-                                  bytesize = serial.EIGHTBITS,
-                                  stopbits = serial.STOPBITS_ONE,
-                                  timeout = timeout,
-                                  write_timeout = timeout*2.0,
-                                  xonxoff = False,
-                                  rtscts = True)
+                                  parity=serial.PARITY_NONE,
+                                  bytesize=serial.EIGHTBITS,
+                                  stopbits=serial.STOPBITS_ONE,
+                                  timeout=timeout,
+                                  write_timeout=timeout*2.0,
+                                  xonxoff=False,
+                                  rtscts=True)
         if self._is_connected():
             print('Port Opened: {}'.format(self._ser.name))
         else:
             print('Port Open Error: {}'.format(self._ser.name))
 
     def _close(self):
-        """Close the serial port.
-        """
+        """Close the serial port."""
         self._reset_input_buffer()
         self._ser.close()
         if not self._is_connected():
             print('Port Disconnected: {}'.format(self._ser.name))
 
     def _print_info(self):
-        """Print the serial port informations.
-        """
+        """Print the serial port informations."""
         print(' port: {}'.format(self._ser.name))
-        for k,v in self._ser.get_settings().items():
+        for k, v in self._ser.get_settings().items():
             print(' {}: {}'.format(k, v))
-        
+
     def _is_connected(self):
         """Return the serial port is connected or not.
 
@@ -69,12 +68,13 @@ class DMA03Driver:
         result = self._ser.write(command_bytes)
         print('Write Data Result (Command Length): {}'.format(result))
         return result
-           
+
     def _recv_command(self, terminator=b'\n'):
-        """Read the serial port input buffer until the terminator.
+        r"""Read the serial port input buffer until the terminator.
 
         Args:
-            terminator (bytes, optional): The terminator to end reading. Defaults to b'\n'.
+            terminator (bytes, optional):
+                The terminator to end reading. Defaults to b'\n'.
 
         Returns:
             str: The received and UTF-8 decoded data.
@@ -86,16 +86,15 @@ class DMA03Driver:
             if len(result) >= len(terminator) and result.endswith(terminator):
                 result = result[:-len(terminator)]
         except serial.SerialException as e:
-            print("Serial Error: {}".format(e))
-        except serial.SerialTimeoutException as e:
-            print("Command Timeout")
-        except:
+            print('Serial Error: {}'.format(e))
+        except serial.SerialTimeoutException:
+            print('Command Timeout')
+        except Exception:
             print('Can Not Receive Command')
         return result.decode('utf-8')
 
     def _reset_input_buffer(self):
-        """Reset the serial port input buffer.
-        """
+        """Reset the serial port input buffer."""
         self._ser.reset_input_buffer()
 
     def _find_port_by_id(self, vendor_id, product_id):
@@ -108,7 +107,7 @@ class DMA03Driver:
         Returns:
             Union[str, None]:
                 - str: The port device string like '/dev/ttyUSB0'.
-                - None: The vendor ID or the product ID did not match the actual devoce connected.
+                - None: VID or PID did not match the actual devoce connected.
         """
         ports = serial.tools.list_ports.comports()
         for port in ports:
@@ -127,50 +126,62 @@ class DMA03Driver:
         Returns:
             Union[str, None]:
                 - str: The port device string like '/dev/ttyUSB0'.
-                - None: The device name or the device location did not match the actual devoce connected.
+                - None: The args did not match the actual device connected.
         """
         ports = serial.tools.list_ports.comports()
         for port in ports:
             if port.product and product_name in port.product:
                 if serial_number:
                     if port.serial_number and serial_number in port.serial_number:
-                        print('Device Serial No. - Specified: {}'.format(port.serial_number))
+                        print(
+                            'Device Serial No. Specified: {}'.format(port.serial_number))
                         return port.device
                 elif location:
                     if port.location and location in port.location:
-                        print('Device Location - Specified: {}'.format(port.location))
+                        print(
+                            'Device Location Specified: {}'.format(port.location))
                         return port.device
                 else:
-                    print('Device Location or Serial No. - NOT Specified and 1st Device Chosen')
+                    print(
+                        'Device Location or Serial No. - NOT Specified' +
+                        'and 1st Device Chosen')
                     return port.device
         return None
 
 
-class DMA03DriverForRobot(DMA03Driver): 
-    """
-    Command I/O class for DMA-03 for Robot amplifier
-    """
-    def __init__(self, debug=False, frequency=1000, init_zero=False, timeout=1.0, serial_number=None, location=None):
-        """Constructor of DMA03DriverForRobot class instance.
+class DMA03DriverForRobot(DMA03Driver):
+    """Command I/O class for DMA-03 for Robot amplifier."""
+
+    def __init__(self,
+                 debug=False,
+                 frequency=1000,
+                 init_zero=False,
+                 timeout=1.0,
+                 serial_number=None,
+                 location=None):
+        """Construct DMA03DriverForRobot class instance.
 
         Args:
-            debug (bool, optional):
-                True is for Debug mode, False is not. Defaults to False.
-            frequency (int, optional):
-                Sensing frequency. Defaults to 1000.
-            init_zero (bool, optional):
-                True to initialize as Zero forces. Defaults to False.
-            timeout (float, optional):
-                The max time [sec] to wait data during read operation. Defaults to 1.0.
-            serial_number (str, optional):
-                The device serial number to distinguish between multiple amplifiers. Defaults to None.
-            location (str, optional):
-                The device location like '1-2' to distinguish between multiple amplifiers. Defaults to None.
+            debug (bool, optional): True is for Debug mode, False is not.
+                                    Defaults to False.
+            frequency (int, optional): Sensing frequency.
+                                        Defaults to 1000.
+            init_zero (bool, optional): True to initialize as Zero forces.
+                                        Defaults to False.
+            timeout (float, optional): The max time [sec] to wait data
+                                        during read operation. Defaults to 1.0.
+            serial_number (str, optional): The device serial number
+                                            to distinguish between multiple amplifiers.
+                                            Defaults to None.
+            location (str, optional): The device location like '1-2'
+                                            to distinguish between multiple amplifiers.
+                                            Defaults to None.
         """
         print('Tec Gihan DMA-03 for Robot Driver: Starting ...')
         product_name = 'DMA-03'
         port = '/dev/ttyUSB0'
-        port = self._find_port_by_name(product_name=product_name, serial_number=serial_number, location=location)
+        port = self._find_port_by_name(
+            product_name=product_name, serial_number=serial_number, location=location)
         self._open(port, timeout=timeout)
         time.sleep(1)
 
@@ -187,20 +198,20 @@ class DMA03DriverForRobot(DMA03Driver):
         self._fs_ch2 = 1000
         self._fs_ch3 = 1000
 
-        reply = self.stop()
+        self.stop()
 
-        reply = self.set_for_robot()
+        self.set_for_robot()
 
-        if init_zero == True:
-            reply = self.set_zero()
+        if init_zero:
+            self.set_zero()
 
         if self.set_frequency(frequency):
             self._frequency = frequency
         else:
             self._frequency = 1000
 
-        reply = self.get_fs()
-        reply = self.get_itf()
+        self.get_fs()
+        self.get_itf()
 
         self._assigning = False
         self._eng1 = 0.0
@@ -213,18 +224,16 @@ class DMA03DriverForRobot(DMA03Driver):
         self._thr.start()
 
     def __del__(self):
-        """Destructor of this class instance.
-        """
+        """Destructor of this class instance."""
         self.close()
 
     def _data_conversion(self):
-        """A threaded function to aquire and convert sensing data.
-        """
+        """Aquire and convert sensing data with thread."""
         while self._is_connected():
             # Skip if self.convert_data is False
             if not self._convert_data:
                 if self._debug:
-                    print("Convert waiting...")
+                    print('Convert waiting...')
                 time.sleep(0.1)
                 continue
             buffer = self._recv_command()
@@ -235,19 +244,24 @@ class DMA03DriverForRobot(DMA03Driver):
                 data = int('0x'+buffer, 0)
                 ch1 = (data & 0xffff00000000) >> 32
                 ch2 = (data & 0x0000ffff0000) >> 16
-                ch3 =  data & 0x00000000ffff
+                ch3 = data & 0x00000000ffff
                 ad1 = self._to_signedint(ch1)
                 ad2 = self._to_signedint(ch2)
                 ad3 = self._to_signedint(ch3)
                 self._assigning = True
-                self._eng1, self._eng2, self._eng3 = self._calculate_eng_data(ad1, ad2, ad3)
+                self._eng1, self._eng2, self._eng3 = self._calculate_eng_data(
+                    ad1, ad2, ad3)
                 self._assigning = False
                 if self._debug:
-                    print('Time: {} (Diff: {} )'.format(self._data_time, diff_time))
+                    print('Time: {} (Diff: {} )'.format(
+                        self._data_time, diff_time))
                     print('Buffer: {}'.format(buffer))  # print without newline
-                    print('Hex: (     0x{:04x},     0x{:04x},     0x{:04x} )'.format(ch1, ch2, ch3))
-                    print('Int: ( {:10d}, {:10d}, {:10d} )'.format(ad1, ad2, ad3))
-                    print('Eng: ( {:10.5f}, {:10.5f}, {:10.5f} )'.format(self._eng1, self._eng2, self._eng3))
+                    print('Hex: (     0x{:04x},     0x{:04x},     0x{:04x} )'.format(
+                        ch1, ch2, ch3))
+                    print('Int: ( {:10d}, {:10d}, {:10d} )'.format(
+                        ad1, ad2, ad3))
+                    print('Eng: ( {:10.5f}, {:10.5f}, {:10.5f} )'.format(
+                        self._eng1, self._eng2, self._eng3))
                 self._ros_publish()
             else:
                 if self._debug:
@@ -255,7 +269,10 @@ class DMA03DriverForRobot(DMA03Driver):
             time.sleep(0.6/self._frequency)
 
     def _ros_publish(self):
-        """An empty function to override in a ROS node to publish a ROS topic after the data conversion.
+        """Be overrided in a ROS node.
+
+        An empty function to override in a ROS node
+        to publish a ROS topic after the data conversion.
 
         Returns:
             bool: False
@@ -284,11 +301,13 @@ class DMA03DriverForRobot(DMA03Driver):
     def _to_signedint(self, value: int, bits=16):
         """Convert an unsigned int to a signed int.
 
-        Converts an unsigned integer to its signed integer representation using two's complement.
+        Converts an unsigned integer to its signed integer representation
+        using two's complement.
 
         Args:
             value (int): The unsigned integer to convert
-            bits (int, optional): The bit width to interpret the value with. Defaults to 16.
+            bits (int, optional): The bit width to interpret the value with.
+                                    Defaults to 16.
 
         Returns:
             int: The signed integer representation of the input value.
@@ -338,7 +357,10 @@ class DMA03DriverForRobot(DMA03Driver):
         return reply
 
     def close(self):
-        """Close the serial port after stopping the amplifier and the data conversion process.
+        """Close the serial port.
+
+        Close the serial port
+        after stopping the amplifier and the data conversion process.
         """
         self._convert_data = False
         if self._is_connected():
@@ -372,7 +394,7 @@ class DMA03DriverForRobot(DMA03Driver):
             wait_ = 3.0
             print('Send ZERO command and wait {} seconds ...'.format(wait_))
             self._send_command('ZERO\n')
-            time.sleep(wait_) # Wait more than 2.0 seconds
+            time.sleep(wait_)  # Wait more than 2.0 seconds
             reply = 'Set ZERO: '
             reply += self._recv_command()
             if restart:
@@ -405,7 +427,7 @@ class DMA03DriverForRobot(DMA03Driver):
             self.fs_ch2 = int(reply[1])
             self.fs_ch3 = int(reply[2])
             print('FS ({},{},{})'.format(self.fs_ch1, self.fs_ch2, self.fs_ch3))
-            return list([self.fs_ch1, self.fs_ch2, self.fs_ch3])
+            return [self.fs_ch1, self.fs_ch2, self.fs_ch3]
 
     def set_fs(self, val_list: list[int]):
         """Set 3 int data of FS (Full Scale) to the amplifier.
@@ -422,8 +444,9 @@ class DMA03DriverForRobot(DMA03Driver):
         dim = 3
         if len(val_list) == dim:
             for i in range(dim):
-                command_string = 'SET_FS_' + str(i) + '_' + str(val_list[i]) + '\n'
-                reply = self._get_reply(command_string)
+                command_string = 'SET_FS_' + \
+                    str(i) + '_' + str(val_list[i]) + '\n'
+                self._get_reply(command_string)
         else:
             print('Get FS Dimension Error: {}/{}'.format(len(fs_list), dim))
             return False
@@ -435,11 +458,14 @@ class DMA03DriverForRobot(DMA03Driver):
             result = True
             if val_list[i] != get_list[i]:
                 overall_result = result = False
-            print('Check Value: No.{} Set:{:5} Get:{:5} Check: {}'.format(i, val_list[i], get_list[i], result))
+            print('Check Value: No.{} Set:{:5} Get:{:5} Check: {}'.format(
+                i, val_list[i], get_list[i], result))
         return overall_result
 
     def get_itf(self):
-        """Get a list of 3x3 float data of ITF (Interference coefficients) from the amplifier.
+        """Get a list of 3x3 float data of ITF from the amplifier.
+
+        ITF means Interference coefficients.
 
         Returns:
             list float: List of 3x3 float ITF data
@@ -469,10 +495,12 @@ class DMA03DriverForRobot(DMA03Driver):
             return list(itf_list)
 
     def set_itf(self, val_list: list[float]):
-        """Set 3x3 float data for ITF (Interference coefficients) in the amplifier.
+        """Set 3x3 float data for ITF in the amplifier.
+
+        ITF means Interference coefficients.
 
         Args:
-            val_list (list[float]): list of 3x3 float data for ITF to set in the amplifier.
+            val_list (list[float]): list of 3x3 float for ITF to set in the amplifier.
 
         Returns:
             bool: True on success, False on failure.
@@ -483,20 +511,22 @@ class DMA03DriverForRobot(DMA03Driver):
         dim = 9
         if len(val_list) == dim:
             for i in range(dim):
-                command_string = 'SET_ITF_' + str(i) + '_' + str(val_list[i]) + '\n'
-                reply = self._get_reply(command_string)
+                command_string = 'SET_ITF_' + \
+                    str(i) + '_' + str(val_list[i]) + '\n'
+                self._get_reply(command_string)
         else:
             print('Set ITF Dimension Error: {}/{}'.format(len(fs_list), dim))
             return False
 
-         # Check for each
+        # Check for each
         overall_result = True
         get_list = self.get_itf()
         for i in range(dim):
             result = True
             if val_list[i] != get_list[i]:
                 overall_result = result = False
-            print('Check Value: No.{} Set:{:9.5f} Get:{:9.5f} Check: {}'.format(i, val_list[i], get_list[i], result))
+            print('Check Value: No.{} Set:{:9.5f} Get:{:9.5f} Check: {}'.format(
+                i, val_list[i], get_list[i], result))
         return overall_result
 
     def set_frequency(self, frequency: int):
@@ -542,7 +572,7 @@ class DMA03DriverForRobot(DMA03Driver):
         return reply, success
 
     def set_for_robot(self):
-        """If available, set the amplifier to robot mode if available or to non-robot mode.
+        """Set the amplifier to robot mode if available or to non-robot mode.
 
         Returns:
             str: Reply for the command or error message if failure.
@@ -557,7 +587,7 @@ class DMA03DriverForRobot(DMA03Driver):
         return set_reply
 
     def get_data(self):
-        """Get engineering data converted from 
+        """Get engineering data.
 
         Returns:
             Tuple[float, float, float, float]:
@@ -590,10 +620,10 @@ if __name__ == '__main__':
     driver = DMA03DriverForRobot(debug=True, init_zero=initialize_)
 
     if driver.is_connected():
-        fs_list = [1000,1000,2000]
-        itf_list = [ 1.44023, 0.09527, 0.00613,
+        fs_list = [1000, 1000, 2000]
+        itf_list = [1.44023, 0.09527, 0.00613,
                     -0.08354, 1.42638, 0.04338,
-                    -0.01594,-0.04522, 1.28155  ]
+                    -0.01594, -0.04522, 1.28155]
         if initialize_:
             reply = driver.set_fs(val_list=fs_list)
             reply = driver.set_itf(val_list=itf_list)
