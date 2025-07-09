@@ -1325,12 +1325,12 @@ robotuser@robotuser-PC:~/tecgihan_ws/src/tecgihan_driver/tecgihan_driver$
 By importing and inheriting or instantiating the `DMA03DriverForRobot` class of `dma03_driver.py` in your Python script, you can create software that utilizes the functions of the driver software.
 
 The basic steps for initializing the `DMA03DriverForRobot` class, starting and stopping data acquisition, and termination of the driver are described in `if __name__ == '__main__':` part of `dma03_driver.py`.
-There is the [`DMA03DriverForRobot` class API document tecgihan_driver / doc / dma03_driver.md](doc/dma03_driver.md), so please refer to it as well.
+There is the [`DMA03DriverForRobot` class API document tecgihan_driver / doc / dma03_driver.md](doc/dma03_driver.md#class-dma03driverforrobot), so please refer to it as well.
 
 Python スクリプトで `dma03_driver.py` の `DMA03DriverForRobot` クラスをインポートして継承もしくはインスタンス化することでドライバソフトウェアの機能を利用したソフトウェアを作成することができます．
 
 `dma03_driver.py` の `if __name__ == '__main__':` 部分に `DMA03DriverForRobot` クラスをインスタンス化した場合の初期化やデータ取得の開始・停止，ドライバの終了の基本的な手順が書かれています．
-また，[`DMA03DriverForRobot` クラス API ドキュメント tecgihan_driver / doc / dma03_driver.md](doc/dma03_driver.md) もありますので併せて参考にしてください．
+また，[`DMA03DriverForRobot` クラス API ドキュメント tecgihan_driver / doc / dma03_driver.md](doc/dma03_driver.md#class-dma03driverforrobot) もありますので併せて参考にしてください．
 
 ``` python
 if __name__ == '__main__':
