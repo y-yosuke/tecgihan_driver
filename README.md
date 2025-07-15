@@ -73,9 +73,9 @@ This package contains softwares for Tec Gihan Co.,Ltd. sensor amplifiers running
 ---
 ---
 
-- **Note**: As of June 2025, the environment for installation with `apt` is currently being prepared.
+- **Note**: As of July 2025, the environment for installation with `apt` in ROS Humble is currently being prepared.
   - Please [build the source code](#source-code-build-optional---ソースコードのビルド応用) and use it until the environmet is ready.
-- **注**: 2025年6月時点では `apt` でインストールする環境は準備中です．
+- **注**: 2025年7月時点の ROS Humble では `apt` でインストールする環境は準備中です．
   - 準備が整うまで [ソースコードビルド](#source-code-build-optional---ソースコードのビルド応用) して利用してください．
 
 ---
