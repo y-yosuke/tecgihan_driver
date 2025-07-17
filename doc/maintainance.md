@@ -87,8 +87,9 @@ tecgihan_driver を ROS パッケージとしてネットワーク経由で debi
 
 事前に次の準備が整っていることを確認してください．
 
-- GitHub 上の `tecgihan_driver` へのプルリクエスト（Pull Request / PR）が来たときにテストが正常に通っていること，コード自体も正常に機能することを確認してから `main` ブランチにマージ（Merge）する
+- GitHub 上の `tecgihan_driver` へのプルリクエスト（Pull Request / PR）が来たときにテストが正常に通っていることとコード自体も正常に機能することを確認してから `main` ブランチにマージ（Merge）されていること
   - テストで `rosdistro` へのプルリクエストがマージされるためのいくつかの条件が達成されていることが確認される
+  - テスト内容は [tecgihan_driver / .github / workflows / ci.yaml](../.github/workflows/ci.yaml) にて記述
 - 作業者が GitHub アカウントを持っている
 - 予め作業者の GitHub アカウントに ROS の `rosdistro` リポジトリがフォーク（Fork）されている
 
@@ -163,6 +164,7 @@ bloom-release --new-track --rosdistro jazzy --track jazzy tecgihan_driver
 
 `bloom-release` 実行中に入力する情報は次のとおりです．
 
+- Release repository url: https://github.com/tecgihan/tecgihan_driver-release.git
 - Repository Name: tecgihan_driver
 - Upstream Repository URI: https://github.com/tecgihan/tecgihan_driver.git
 - Upstream VCS Type: git
@@ -176,9 +178,9 @@ bloom-release --new-track --rosdistro jazzy --track jazzy tecgihan_driver
 Continue [Y/n]? y`
 
 
-### ROS パッケージのリリース状況の確認
+### ROS パッケージリリース達成状況の確認
 
-`rosdistro` へのプルリクエストがマージされた後に `tecgihan_driver` ROS パッケージのリリース状況を確認するには次の Web サイトにアクセスしてください．
+`rosdistro` へのプルリクエストがマージされた後に `tecgihan_driver` ROS パッケージのリリース達成状況を確認するには次の Web サイトにアクセスしてください．
 
 - ROS Packages for Humble - tecgihan_driver
   - https://repo.ros2.org/status_page/ros_humble_default.html?q=tecgihan_driver
