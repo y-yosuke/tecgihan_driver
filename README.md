@@ -20,8 +20,11 @@ This package contains softwares for Tec Gihan Co.,Ltd. sensor amplifiers running
 
 ## System Requirement - システム要件
 
-- Ubuntu 24.04 + ROS Jazzy
+`tecgihan_driver` supports the following system combinations.  
+`tecgihan_driver` は下記のシステムの組み合わせに対応しています．
+
 - Ubuntu 22.04 + ROS Humble
+- Ubuntu 24.04 + ROS Jazzy
 
 
 ## Software Configurations of DMA-03 for Robot Amplifier Driver<br> - ロボット用 DMA-03 アンプドライバソフトウェア構成
@@ -91,6 +94,12 @@ sudo apt update
 sudo apt full-upgrade
 sudo apt install ros-$ROS_DISTRO-tecgihan-driver
 ```
+
+When installing with the `apt` command above, the user is configured to belong to the `dialout` group in order to enable access to the DMA-03 for Robot amplifier.
+To enable the changes to the group settings, please do one of two methods below.
+
+上記の `apt` コマンドでのインストール時にユーザが DMA-03 for Robot アンプにアクセス可能にするために `dialout` グループに所属するよう設定をしています．
+そのグループ設定の変更を有効化するために下記の2通りの方法のいずれかを実行してください．
 
 To apply the group change, please do one of the following:
 1. Log out and log back in (recommended)
@@ -399,8 +408,10 @@ If you have an environment where you can use sensor software on a Windows PC, yo
 
 Windows PC でセンサソフトウェアを使用することができる環境があれば次の手順でも可能です．
 
-1. Windows のソフトでパラメータ編集＆ゼロ調整
-2. ROS で通常どおりセンサドライバを launch 起動
+1. Edit and zero adjustment using Windows software  
+    Windows のソフトでパラメータ編集＆ゼロ調整
+2. Launch the ROS sensor driver software normally on Ubuntu  
+    Ubuntu 上で通常どおり ROS センサドライバソフトウェアを起動
 
 ---
 
