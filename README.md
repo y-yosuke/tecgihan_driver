@@ -70,17 +70,6 @@ This package contains softwares for Tec Gihan Co.,Ltd. sensor amplifiers running
 
 ## Installation - インストール
 
----
----
-
-- **Note**: As of July 2025, the environment for installation with `apt` in ROS Humble is currently being prepared.
-  - Please [build the source code](#source-code-build-optional---ソースコードのビルド応用) and use it until the environmet is ready.
-- **注**: 2025年7月時点の ROS Humble では `apt` でインストールする環境は準備中です．
-  - 準備が整うまで [ソースコードビルド](#source-code-build-optional---ソースコードのビルド応用) して利用してください．
-
----
----
-
 Before this installation, make sure that the appropriate version of ROS is already installed on your Ubuntu PC.  
 
 インストールの前提として既に Ubuntu PC に適切なバージョンの ROS がインストールされていることを確認してください．
