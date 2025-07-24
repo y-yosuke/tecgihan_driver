@@ -9,14 +9,14 @@ This package contains softwares for Tec Gihan Co.,Ltd. sensor amplifiers running
 
 ## Sensors and Amplifiers - 対応センサ・アンプ
 
-- Tec Gihan Co.,Ltd. - テック技販
+- [Tec Gihan Co.,Ltd. - テック技販](https://tecgihan.co.jp/)
   - Amplifiers for Robot - ロボット用アンプ
     - DMA-03 for Robot
-  - Force Sensors - 力センサ
-    - USL06-H5-500N-C
-    - USL08-H6-2KN-C
-    - ... TBD ...
+  - [Force Sensors - 力センサ](https://tecgihan.co.jp/product/forcesensor/sensor/)
+    - [USL06-H5 Series](https://tecgihan.co.jp/product/forcesensor/sensor/usl06.html)
+    - [USL08-H6 Series](https://tecgihan.co.jp/product/forcesensor/sensor/usl08.html)<br>![Force Sensor](doc/images/tecgihan_force-sensor_small.JPG)
 
+![Sensor-Amplifire-RViz](doc/images/dma03_sensor_rviz.JPG)
 
 ## System Requirement - システム要件
 
@@ -166,6 +166,8 @@ ros2 launch tecgihan_driver dma03_demo_launch.xml
   `$ROS_DISTRO` : `jazzy` もしくは `humble` で置き換えてください．
 
 ![RViz2 DMA-03 for Robot Demonstration](./doc/images/rviz_dma03-for-robot_demonstration.png)
+
+![Force around Z-axis](doc/images/rviz_foce-z_force-sensor_small.JPG)
 
 To end the demonstration, press Ctrl-C in the terminal.  
 デモンストレーションを終了するときはターミナルで Ctrl-C を押してください．
